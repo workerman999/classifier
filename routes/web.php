@@ -16,3 +16,4 @@ Route::get('/get-records', 'HomeController@getRecords');
 Route::post('/import-csv', 'HomeController@importCsv');
 Route::post('/calculate-records', 'HomeController@calculateRecords');
 Route::post('/save-record', 'HomeController@saveRecord');
+Route::get('/export-csv', 'HomeController@exportCsv');

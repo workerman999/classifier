@@ -45,6 +45,9 @@ input {
 .pagination li {
   cursor: pointer;
 }
+.pagination span {
+  min-width: 44px;
+}
 .btn-group-sm {
   margin-top: -3px;
 }
@@ -85,4 +88,12 @@ input {
   transition: all .6s ease-in-out;
   border-radius: 3px;
   overflow: hidden;
+  padding: 10px;
+  font-size: 15px;
+}
+
+.modal-footer {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }

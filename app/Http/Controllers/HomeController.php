@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Record;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class HomeController extends Controller
 {
@@ -54,5 +55,31 @@ class HomeController extends Controller
                 'topic' => $record->topic
             ]);
         }
+    }
+
+    public function exportCsv()
+    {
+        $headers = array(
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=file.csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        );
+
+        $records = Record::all();
+        $columns = ['id', 'text', 'topic'];
+
+        $callback = function() use ($records, $columns)
+        {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach($records as $record) {
+                fputcsv($file, [$record->id, $record->text, $record->topic]);
+            }
+            fclose($file);
+        };
+        return Response::stream($callback, 200, $headers);
     }
 }

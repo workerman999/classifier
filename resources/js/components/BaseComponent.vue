@@ -7,7 +7,7 @@
                 <label for="file-import" class="btn btn-outline-dark">
                     <span>Импортировать</span>
                 </label>
-                <button type="button" class="btn btn-outline-dark">Экспортировать</button>
+                <a href="/export-csv" type="button" class="btn btn-outline-dark">Экспортировать</a>
                 <button type="button" class="btn btn-outline-dark" @click="calculate()">Пересчитать</button>
             </div>
         </div>
@@ -32,18 +32,19 @@
         <div class="card-footer">
             <ul class="pagination float-right">
                 <li class="page-item" :class="{ disabled: isMinPage }">
-                    <span class="page-link" aria-hidden="true" @click.prevent="setPage(curPage - 1)">‹</span>
+                    <span class="page-link text-center" aria-hidden="true" @click.prevent="setPage(curPage - 1)">‹</span>
                 </li>
                 <li v-for="page in pagination.pages" class="page-item" :class="{ active: page == curPage }" v-if="((page >= (curPage - 2)) && (page <= (curPage + 2)))">
-                    <span class="page-link" @click.prevent="setPage(page)">{{ page }}</span>
+                    <span class="page-link text-center" @click.prevent="setPage(page)">{{ page }}</span>
                 </li>
                 <li class="page-item" :class="{ disabled: isMaxPage }">
-                    <span class="page-link" aria-hidden="true" @click.prevent="setPage(curPage + 1)">›</span>
+                    <span class="page-link text-center" aria-hidden="true" @click.prevent="setPage(curPage + 1)">›</span>
                 </li>
             </ul>
         </div>
 
         <wait-component v-if="waitProcess"></wait-component>
+        <error-component v-if="showError" @cancel="cancel"></error-component>
 
     </div>
 
@@ -59,6 +60,7 @@
                 curPage: 1,
                 totalPage: 0,
                 waitProcess: false,
+                showError: false
             }
         },
         computed: {
@@ -101,6 +103,7 @@
                         this.totalPage = this.records.length / this.perPage;
                         this.setPage(1);
                     }).catch(error => {
+                        this.showError = true;
                     console.error(error.response);
                 });
             },
@@ -151,6 +154,9 @@
             reject(key) {
                 this.records[key].source = '';
                 this.records[key].topic = '';
+            },
+            cancel() {
+                this.showError = false;
             }
         }
     }

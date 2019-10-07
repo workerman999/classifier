@@ -22,6 +22,7 @@ window.Vue = require('vue');
 
 Vue.component('base-component', require('./components/BaseComponent').default);
 Vue.component('wait-component', require('./components/WaitComponent').default);
+Vue.component('error-component', require('./components/ErrorComponent').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
