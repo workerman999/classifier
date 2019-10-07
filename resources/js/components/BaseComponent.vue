@@ -20,10 +20,10 @@
                 </div>
                 <div class="col-sm-5">
                     <div class="form-control">
-                        <input typeof="text" class="content-line" type="text" v-model="record.topic">
-                        <div v-if="record.source == 'predicted'" class="btn-group-sm float-right" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-outline-dark btn-sm" @click="accept(key)">Принять</button>
-                            <button type="button" class="btn btn-outline-dark btn-sm" @click="reject(key)">Отклонить</button>
+                        <input type="text" class="content-line" v-model="record.topic">
+                        <div v-if="record.source === 'predicted'" class="btn-group-sm float-right" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-dark btn-sm" @click="accept(record)">Принять</button>
+                            <button type="button" class="btn btn-outline-dark btn-sm" @click="reject(record)">Отклонить</button>
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 <li class="page-item" :class="{ disabled: isMinPage }">
                     <span class="page-link text-center" aria-hidden="true" @click.prevent="setPage(curPage - 1)">‹</span>
                 </li>
-                <li v-for="page in pagination.pages" class="page-item" :class="{ active: page == curPage }" v-if="((page >= (curPage - 2)) && (page <= (curPage + 2)))">
+                <li v-for="page in pagination.pages" class="page-item" :class="{ active: page === curPage }" v-if="((page >= (curPage - 2)) && (page <= (curPage + 2)))">
                     <span class="page-link text-center" @click.prevent="setPage(page)">{{ page }}</span>
                 </li>
                 <li class="page-item" :class="{ disabled: isMaxPage }">
@@ -68,13 +68,13 @@
                 return this.paginate(this.records);
             },
             isActive: function (page) {
-                return  (this.curPage == page) ? true : false;
+                return  this.curPage === page;
             },
             isMinPage() {
-                return (this.curPage <= 1) ? true : false;
+                return this.curPage <= 1;
             },
             isMaxPage() {
-                return (this.curPage >= this.totalPage) ? true : false;
+                return this.curPage >= this.totalPage;
             },
         },
         mounted() {
@@ -141,19 +141,23 @@
                 });
             },
             // Принять предложенный вариант
-            accept(key) {
+            accept(record) {
                 axios.post('/save-record',{
-                    data: JSON.stringify(this.records[key]),
+                    data: JSON.stringify(record),
                 }).then((response) => {
-                    this.records[key].source = '';
+                    record.source = '';
                 }).catch(error => {
                     console.error(error.response);
                 });
             },
             // Отклонить предложенный вариант
-            reject(key) {
-                this.records[key].source = '';
-                this.records[key].topic = '';
+            reject(record) {
+                this.records.forEach(function (item) {
+                    if (item.id === record.id) {
+                        item.source = '';
+                        item.topic = '';
+                    }
+                });
             },
             cancel() {
                 this.showError = false;

@@ -1788,13 +1788,13 @@ __webpack_require__.r(__webpack_exports__);
       return this.paginate(this.records);
     },
     isActive: function isActive(page) {
-      return this.curPage == page ? true : false;
+      return this.curPage === page;
     },
     isMinPage: function isMinPage() {
-      return this.curPage <= 1 ? true : false;
+      return this.curPage <= 1;
     },
     isMaxPage: function isMaxPage() {
-      return this.curPage >= this.totalPage ? true : false;
+      return this.curPage >= this.totalPage;
     }
   },
   mounted: function mounted() {
@@ -1872,21 +1872,23 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     // Принять предложенный вариант
-    accept: function accept(key) {
-      var _this4 = this;
-
+    accept: function accept(record) {
       axios.post('/save-record', {
-        data: JSON.stringify(this.records[key])
+        data: JSON.stringify(record)
       }).then(function (response) {
-        _this4.records[key].source = '';
+        record.source = '';
       })["catch"](function (error) {
         console.error(error.response);
       });
     },
     // Отклонить предложенный вариант
-    reject: function reject(key) {
-      this.records[key].source = '';
-      this.records[key].topic = '';
+    reject: function reject(record) {
+      this.records.forEach(function (item) {
+        if (item.id === record.id) {
+          item.source = '';
+          item.topic = '';
+        }
+      });
     },
     cancel: function cancel() {
       this.showError = false;
@@ -37285,7 +37287,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "content-line",
-                  attrs: { typeof: "text", type: "text" },
+                  attrs: { type: "text" },
                   domProps: { value: record.topic },
                   on: {
                     input: function($event) {
@@ -37297,7 +37299,7 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                record.source == "predicted"
+                record.source === "predicted"
                   ? _c(
                       "div",
                       {
@@ -37312,7 +37314,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                return _vm.accept(key)
+                                return _vm.accept(record)
                               }
                             }
                           },
@@ -37326,7 +37328,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                return _vm.reject(key)
+                                return _vm.reject(record)
                               }
                             }
                           },
@@ -37374,7 +37376,7 @@ var render = function() {
                     "li",
                     {
                       staticClass: "page-item",
-                      class: { active: page == _vm.curPage }
+                      class: { active: page === _vm.curPage }
                     },
                     [
                       _c(
@@ -49997,8 +49999,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\conjoint\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\conjoint\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\classifier\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\classifier\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
